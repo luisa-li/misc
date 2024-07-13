@@ -22,7 +22,9 @@ def sums_of_items(items, k):
     sums = [sum(comb) for comb in list(combs)]
     return sums 
 
-squares = squared_primes(10, 50)
+def squared_primes():
+    squares = squared_primes(10, 50)
 
-for i in range(7):
-    print(np.mod(np.array(sums_of_items(squares, i + 1)), 8))
+    for i in range(7):
+        print(np.mod(np.array(sums_of_items(squares, i + 1)), 8))
+    

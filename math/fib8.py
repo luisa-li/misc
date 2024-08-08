@@ -16,3 +16,4 @@ def fibonacci(n):
     return fib[n]
 
 print([fibonacci(n) % 8 for n in range(100)])
+print(5**(187) % 18)

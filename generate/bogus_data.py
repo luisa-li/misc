@@ -1,5 +1,6 @@
 """Generate a CSV with a whole bunch of bogus data to be uploaded into supabase"""
 
+from itertools import product 
 import pandas as pd
 import random
 
@@ -21,16 +22,25 @@ user_ids = [
     "c9bd4c67-7937-4ee3-959d-21a1b3db70eb",
     "8d245124-6baa-48e3-8f20-ce125d5c22b7"
 ]
-review_ids = [i for i in range(100)]
-upvotes = [True, False]
+review_ids = [i for i in range(154, 181)]
 
 num_rows = 100
 
+cross_product = list(product(user_ids, review_ids))
+selected = random.sample(cross_product, 100)
+
 data = {
-    'user_id': [random.choice(user_ids) for _ in range(num_rows)],
-    'review_id': [random.choice(review_ids) for _ in range(num_rows)],
-    'upvote': [random.choice(upvotes) for _ in range(num_rows)]
+    'user_id': [],
+    'review_id': [],
+    'upvote': []
 }
 
+for row in selected: 
+    user, review = row
+    upvote = random.choice(["TRUE", "FALSE"])
+    data['user_id'].append(user)
+    data['review_id'].append(review)
+    data['upvote'].append(upvote)
+
 df = pd.DataFrame(data)
-df.to_csv('generate_data.csv', index=False)
+df.to_csv('generate/generate_data.csv', index=False)

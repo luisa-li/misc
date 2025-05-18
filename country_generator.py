@@ -1,3 +1,5 @@
+"""To play Azul"""
+
 import random
 
 countries = [

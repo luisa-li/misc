@@ -11,6 +11,3 @@ print(all_bin)
 print(a, f"count: {len(a)}")
 print(b, f"count: {len(b)}")
 print(c, f"count: {len(c)}")
-
-
-

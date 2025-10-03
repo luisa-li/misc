@@ -1,3 +1,4 @@
 for_sofi/data
 charlie/osf-release
 charlie/filtered_data.json
+*.csv

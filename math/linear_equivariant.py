@@ -1,48 +1,51 @@
-import numpy as np
-from numpy.linalg import inv
-from scipy.linalg import null_space
+import sympy as sp
 
 # defining the generators of the group D3
 
-rho_r = np.array([
+rho_r = sp.Matrix([
     [0, 0, 1, 0, 0, 0],
     [1, 0, 0, 0, 0, 0],
     [0, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0],
     [0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 1, 0, 0]
-], dtype=int)
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 1, 0]
+])
 
-rho_s = np.array([
+rho_f = sp.Matrix([
     [0, 0, 0, 1, 0, 0],
     [0, 0, 0, 0, 0, 1],
     [0, 0, 0, 0, 1, 0],
     [1, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0]
-], dtype=int)
+    [0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0]
+])
 
 # computing the constraint for each of the generators
 
 
-def compute_constraints(mat: np.array):
-    inv_t = inv(mat).T
-    kron = np.kron(mat, inv_t)
-    minus_I = kron - np.eye(kron.shape[0])
-    return minus_I
+def compute_constraints(mat):
+    return sp.kronecker_product(mat, (mat.inv()).T) - sp.eye(36)
 
 
 cons1 = compute_constraints(rho_r)
-cons2 = compute_constraints(rho_s)
+cons2 = compute_constraints(rho_f)
 
-# stacked
+# stack constraints
+M = sp.Matrix.vstack(cons1, cons2)
 
-M = np.vstack([cons1, cons2])
-ns = null_space(M)
+# compute nullspace
+ns = M.nullspace()
 
-# extracting the functions
+# reshape
+W_list = [v.reshape(6, 6) for v in ns]
 
-W_list = [vec.reshape((6, 6)) for vec in ns.T]
+# building the rest of the group representations
+rho_e = sp.eye(6)
+rho_r2 = rho_r * rho_r
+rho_rf = rho_r * rho_f
+rho_r2f = rho_r2 * rho_f
 
-# testing equivariance
-
+# checking commutativity 
+for w in W_list:
+    for g in [rho_e, rho_r, rho_r2, rho_f, rho_rf, rho_r2f]: 
+        assert w * g == g * w

@@ -3,3 +3,4 @@ charlie/osf-release
 charlie/filtered_data.json
 *.csv
 *.pyc
+*.xlsx
